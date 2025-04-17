@@ -8,8 +8,11 @@ import (
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
+
 	"github.com/spf13/cobra"
 )
+
+var folderPath string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -22,6 +25,11 @@ user from editing it in Cadence Virtuoso.`,
 	// Run: func(cmd *cobra.Command, args []string) { },
 	Run: func(cmd *cobra.Command, args []string) {
 		initialModel := InitialModel()
+
+		//If folderpath was provided as a flag, set it in the model
+		if folderPath != "" {
+			initialModel.SetFolderPath(folderPath)
+		}
 
 		p := tea.NewProgram(initialModel)
 		if _, err := p.Run(); err != nil {
@@ -51,4 +59,5 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.Flags().StringVarP(&folderPath, "folder", "f", "", "Folder path to search for .cdslck files")
 }

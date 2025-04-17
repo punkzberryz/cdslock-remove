@@ -6,6 +6,7 @@ require (
 	github.com/charmbracelet/bubbles v0.21.0
 	github.com/charmbracelet/bubbletea v1.3.4
 	github.com/charmbracelet/lipgloss v1.1.0
+	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/spf13/cobra v1.9.1
 )
 
