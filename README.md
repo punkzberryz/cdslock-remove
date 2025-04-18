@@ -12,6 +12,8 @@ make build-linux
 
 You will get an executable binary file cdslock-remove, which can be coppied over to your Linux server and be executed from there.
 
+Alternatively, you can download the binary file from:
+
 ## TODO
 
 - handle the case when user add -folder flag
