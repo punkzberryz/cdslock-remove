@@ -14,3 +14,15 @@ You will get an executable binary file cdslock-remove, which can be coppied over
 
 Alternatively, you can download the binary file from:
 [cdslock-remove](https://github.com/punkzberryz/cdslock-remove/raw/refs/heads/master/bin/cdslock-remove)
+
+Don't forget to make the file executable with command:
+
+```bash
+chmod -R 777 cdslock-remove
+```
+
+and execuate it with command:
+
+```bash
+./cdslock-remove
+```
