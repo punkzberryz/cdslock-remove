@@ -1,4 +1,4 @@
-package cmd
+package search
 
 import (
 	"io/fs"

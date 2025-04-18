@@ -8,6 +8,7 @@ import (
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/punkzberryz/cdslock-remove/internal/tui"
 
 	"github.com/spf13/cobra"
 )
@@ -24,7 +25,7 @@ user from editing it in Cadence Virtuoso.`,
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
 	Run: func(cmd *cobra.Command, args []string) {
-		initialModel := InitialModel()
+		initialModel := tui.InitialModel()
 
 		//If folderpath was provided as a flag, set it in the model
 		if folderPath != "" {
@@ -59,5 +60,6 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.Flags().StringVarP(&folderPath, "folder", "f", "", "Folder path to search for .cdslck files")
+	rootCmd.Flags().
+		StringVarP(&folderPath, "folder", "f", "", "Folder path to search for .cdslck files")
 }
