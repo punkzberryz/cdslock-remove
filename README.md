@@ -13,9 +13,4 @@ make build-linux
 You will get an executable binary file cdslock-remove, which can be coppied over to your Linux server and be executed from there.
 
 Alternatively, you can download the binary file from:
-[cdslock-remove](https://github.com/punkzberryz/cdslock-remove/blob/master/bin/cdslock-remove)
-
-## TODO
-
-- handle the case when user add -folder flag
-- showing default of /home/$USER or $CDR_PRJ
+[cdslock-remove](https://github.com/punkzberryz/cdslock-remove/raw/refs/heads/master/bin/cdslock-remove)
