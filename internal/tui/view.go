@@ -18,7 +18,7 @@ func (m Model) View() string {
 		)
 	}
 	if m.state == SEARCHING {
-		s += m.statusMessage
+		s += fmt.Sprintf("\n\n %s %s\n\n", m.spinner.View(), m.statusMessage)
 	}
 
 	if m.state == CONFIRM {

@@ -1,6 +1,7 @@
 package tui
 
 import (
+	"github.com/charmbracelet/bubbles/spinner"
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
@@ -50,6 +51,7 @@ type Model struct {
 	errorMessage  string
 	statusMessage string
 	quitMessage   string
+	spinner       spinner.Model //Spinner ui
 }
 
 // InitialModel returns a new model with default values
