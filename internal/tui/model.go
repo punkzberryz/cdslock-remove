@@ -52,10 +52,14 @@ type Model struct {
 	statusMessage string
 	quitMessage   string
 	spinner       spinner.Model //Spinner ui
+	spinnerFrame  int
 }
 
 // InitialModel returns a new model with default values
 func InitialModel() Model {
+	s := spinner.New()
+	s.Spinner = spinner.Monkey
+	s.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
 	ti := textinput.New()
 	ti.Placeholder = "Enter folder path (e.g. /kang/project/)"
 	ti.Focus()
@@ -71,6 +75,8 @@ func InitialModel() Model {
 		errorMessage:  "",
 		statusMessage: "",
 		quitMessage:   "",
+		spinner:       s,
+		spinnerFrame:  0,
 	}
 }
 
@@ -91,7 +97,11 @@ func (m Model) Init() tea.Cmd {
 			return nil
 		}
 	}
-	return textinput.Blink
+	// return textinput.Blink
+	return tea.Batch(
+		textinput.Blink,
+		m.spinner.Tick, //Start the spinner ticking
+	)
 }
 
 // SetFolderPath sets the folder path and skips the input state

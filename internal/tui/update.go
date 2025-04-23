@@ -13,7 +13,13 @@ import (
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
-	var cmd tea.Cmd
+	// var cmd tea.Cmd //colect commands
+	var cmds []tea.Cmd
+	//always update spinner
+	var spinnerCmd tea.Cmd
+	m.spinner, spinnerCmd = m.spinner.Update(msg)
+	cmds = append(cmds, spinnerCmd)
+
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch m.state {
@@ -144,11 +150,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	// Handle text input updates during INPUT state
 	if m.state == INPUT {
-		m.textInput, cmd = m.textInput.Update(msg)
-		return m, cmd
+		var textCmd tea.Cmd
+		m.textInput, textCmd = m.textInput.Update(msg)
+		cmds = append(cmds, textCmd)
+		//m.textInput, cmd = m.textInput.Update(msg)
+		// return m, cmd
 	}
 	// Handle viewport updates
-	return m, cmd
+	// return m, cmd
+	return m, tea.Batch(cmds...)
 }
 
 // updateConfirmView updates the viewport with the confirmation view
