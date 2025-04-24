@@ -118,4 +118,5 @@ func (m *Model) SetFolderPath(path string) {
 func (m *Model) SetDefaultFolderPath(path string) {
 	m.folderPath = path
 	m.skipInput = false
+	m.textInput.SetValue(path)
 }
