@@ -31,29 +31,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			//user pressed Enter key
 			if msg.Type == tea.KeyEnter {
 				folderPath := strings.TrimSpace(m.textInput.Value())
-				if folderPath == "" {
-					m.state = ERROR
-					m.errorMessage = "Error: No folder path provided."
-					return m, nil
-				}
-
-				//Check if folder exists
-				info, err := os.Stat(folderPath)
-				if err != nil || !info.IsDir() {
-					m.state = ERROR
-					m.errorMessage = fmt.Sprintf("Error: The folder '%s' does not exist.", folderPath)
-					return m, nil
-				}
-
-				m.folderPath = folderPath
-				m.state = SEARCHING
-				m.statusMessage = fmt.Sprintf("Searching for .cdslck files in '%s'...", folderPath)
-
-				// Start searching for .cdslck files
-				return m, func() tea.Msg {
-					files := s.SearchFilesParallel(folderPath)
-					return findFilesMsg{files: files}
-				}
+				return m.ValidateInputAndStartSearching(folderPath)
 			}
 
 		case CONFIRM:
@@ -146,6 +124,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				path:    nextfile,
 			}
 		}
+
+	case searchImmediatelyMsg:
+		//handle when user keyin folder from CLI
+		folderPath := m.folderPath
+		return m.ValidateInputAndStartSearching(folderPath)
 	}
 
 	// Handle text input updates during INPUT state
@@ -188,4 +171,30 @@ func (m *Model) updateConfirmView() {
 
 	content += fmt.Sprintf("%s    %s", yesButton, noButton)
 	m.statusMessage = content
+}
+
+// ValidateInputAndStartSearching
+func (m *Model) ValidateInputAndStartSearching(folderPath string) (tea.Model, tea.Cmd) {
+	if folderPath == "" {
+		m.state = ERROR
+		m.errorMessage = "Error: No folder path provided."
+		return m, nil
+	}
+	//Check if folder exists
+	info, err := os.Stat(folderPath)
+	if err != nil || !info.IsDir() {
+		m.state = ERROR
+		m.errorMessage = fmt.Sprintf("Error: The folder '%s' does not exist.", folderPath)
+		return m, nil
+	}
+	//Prepare to search...
+	m.folderPath = folderPath
+	m.state = SEARCHING
+	m.statusMessage = fmt.Sprintf("Searching for .cdslck files in '%s'...", folderPath)
+
+	// Start searching for .cdslck files
+	return m, func() tea.Msg {
+		files := s.SearchFilesParallel(folderPath)
+		return findFilesMsg{files: files}
+	}
 }

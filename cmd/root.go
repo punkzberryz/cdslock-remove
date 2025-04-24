@@ -5,7 +5,9 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"path/filepath"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/punkzberryz/cdslock-remove/internal/tui"
@@ -20,24 +22,51 @@ var rootCmd = &cobra.Command{
 	Use:   "cdslock-remove",
 	Short: "Release cdslock to enable user to edit cellview in Cadence Virtuoso",
 	Long: `Command that helps you release the CDS locking of the cellview that prevents
-user from editing it in Cadence Virtuoso.`,
+user from editing it in Cadence Virtuoso.
+Usage examples:
+  cdslock-remove
+	cdslock-remove .
+	cdslock-remove /home/kang/
+
+	`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
 	Run: func(cmd *cobra.Command, args []string) {
 		initialModel := tui.InitialModel()
-
+		if len(args) > 0 {
+			folderPathArg := args[0]
+			folderPath, err := getDirectory(folderPathArg)
+			if err != nil {
+				log.Fatal(err)
+			}
+			initialModel.SetFolderPath(folderPath)
+		} else {
+			defaultDir, err := getDirectory("")
+			if err != nil {
+				log.Fatal(err)
+			}
+			initialModel.SetDefaultFolderPath(defaultDir)
+		}
 		//If folderpath was provided as a flag, set it in the model
 		if folderPath != "" {
 			initialModel.SetFolderPath(folderPath)
 		}
-
 		p := tea.NewProgram(initialModel)
 		if _, err := p.Run(); err != nil {
 			fmt.Printf("Error running program: %v\n", err)
 			os.Exit(1)
 		}
 	},
+}
+
+func getDirectory(pathArg string) (string, error) {
+	var path string
+	path, err := filepath.Abs(pathArg)
+	if err != nil {
+		return path, err
+	}
+	return path, nil
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

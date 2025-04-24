@@ -89,13 +89,17 @@ type deleteResultMsg struct {
 	index   int
 }
 
+type searchImmediatelyMsg struct{}
+
 func (m Model) Init() tea.Cmd {
 	// If folder path was provided as a flag, skip input state
 	if m.skipInput {
-		return func() tea.Msg {
-			//TODO: add function to process this...
-			return nil
-		}
+		return tea.Batch(
+			m.spinner.Tick,
+			func() tea.Msg {
+				return searchImmediatelyMsg{}
+			},
+		)
 	}
 	// return textinput.Blink
 	return tea.Batch(
@@ -108,4 +112,10 @@ func (m Model) Init() tea.Cmd {
 func (m *Model) SetFolderPath(path string) {
 	m.folderPath = path
 	m.skipInput = true
+}
+
+// Set default folder, we will not skip input but have input filled by default
+func (m *Model) SetDefaultFolderPath(path string) {
+	m.folderPath = path
+	m.skipInput = false
 }
